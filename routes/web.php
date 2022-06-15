@@ -46,11 +46,11 @@ Route::prefix('/aluno')->group(function () {
     Route::get('/limite/{limit}', function ($limit) {
         $alunos =
             [
-                ['Renan Luiz'],
-                ['Kauan Matheus'],
-                ['Rafael Macedo'],
-                ['Eliane Alves'],
-                ['Renato Souza']
+                'Renan Luiz',
+                'Kauan Matheus',
+                'Rafael Macedo',
+                'Eliane Alves',
+                'Renato Souza'
             ];
 
         $i = 0;
@@ -59,7 +59,7 @@ Route::prefix('/aluno')->group(function () {
 
         foreach ($alunos as $aluno) {
             if ($i < $limit) {
-                $p = $p . "<li>$aluno</li>";
+                $p = $p ."<li>$aluno</li>";
             }
             $i++;
         }
