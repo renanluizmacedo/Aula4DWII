@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,25 +24,33 @@ Route::prefix('/aluno')->group(function () {
 
     Route::get('/', function () {
         $alunos =
-            "<ul>
-            <li>Renan Luiz</li>
-            <li>Kauan Matheus</li>
-            <li>Rafael Macedo</li>
-            <li>Eliane Alves</li>
-            <li>Renato Souza</li>
-        </ul>";
+            [
+                ['matricula' => 1, 'nome' => 'Renan Luiz'],
+                ['matricula' => 2, 'nome' => 'Kauan Matheus'],
+                ['matricula' => 3, 'nome' => 'Rafael Macedo'],
+                ['matricula' => 4, 'nome' => 'Eliane Alves'],
+                ['matricula' => 5, 'nome' => 'Renato Souza']
+            ];
 
-        return $alunos;
+        $p =  "<ul>";
+
+        foreach ($alunos as $aluno) {
+            $p = $p . "<li> Matricula =>" . $aluno['matricula'] . " - |Nome =>" . $aluno['nome'] . "</li>";
+        }
+
+        $p .= "</ul>";
+
+        return $p;
     })->name('aluno');
 
     Route::get('/limite/{limit}', function ($limit) {
         $alunos =
             [
-                'Renan Luiz',
-                'Kauan Matheus',
-                'Rafael Macedo',
-                'Eliane Alves',
-                'Renato Souza'
+                ['Renan Luiz'],
+                ['Kauan Matheus'],
+                ['Rafael Macedo'],
+                ['Eliane Alves'],
+                ['Renato Souza']
             ];
 
         $i = 0;
@@ -65,70 +74,89 @@ Route::prefix('/aluno')->group(function () {
 
         $alunos =
             [
-                'Renan Luiz',
-                'Kauan Matheus',
-                'Rafael Macedo',
-                'Eliane Alves',
-                'Renato Souza'
+                ['matricula' => 1, 'nome' => 'Renan Luiz'],
+                ['matricula' => 2, 'nome' => 'Kauan Matheus'],
+                ['matricula' => 3, 'nome' => 'Rafael Macedo'],
+                ['matricula' => 4, 'nome' => 'Eliane Alves'],
+                ['matricula' => 5, 'nome' => 'Renato Souza']
             ];
 
-        $p = "<ul><li>" . $alunos[$mat - 1] . "</li></ul>";
+        foreach ($alunos as $aluno) {
+            if ($aluno['matricula'] == $mat) {
+                $p = "Aluno: " . $aluno['nome'] . "</li></ul>";
 
-        return $p;
-    })->name('matricula')->where('mat', '[1-5]');;
+                return $p;
+            }
+        }
+        return "<h1>Aluno não encontrado</h1>";
+    })->name('matricula')->where('mat', '[1-9]');;
 
     Route::get('/nome/{nome}', function ($nome) {
         $alunos =
             [
-                'Renan Luiz',
-                'Kauan Matheus',
-                'Rafael Macedo',
-                'Eliane Alves',
-                'Renato Souza'
+                'Renan',
+                'Kauan',
+                'Rafael',
+                'Eliane',
+                'Renato'
             ];
 
         foreach ($alunos as $aluno) {
             if (strcmp($nome, $aluno) == 0) {
-                return $aluno;
-            } else {
-                return "<h1>Aluno não encontrado!</h1>";
-            }
+                return "Aluno encontrado => " . $aluno;
+            } 
         }
+
+        return "<h1>Aluno não encontrado!</h1>";
+
     })->name('nome')->where('nome', '[A-Za-z]+');
 });
 
 Route::prefix('/nota')->group(function () {
 
     Route::get('/', function () {
-        $notas =
-            "<ul>
-                <li>Renan Luiz</li>
-                <li>Kauan Matheus</li>
-                <li>Rafael Macedo</li>
-                <li>Eliane Alves</li>
-                <li>Renato Souza</li>
-            </ul>";
+        $alunos =
+            [
+                ['matricula' => 1, 'nome' => 'Renan Luiz', 'nota' => 1],
+                ['matricula' => 2, 'nome' => 'Kauan Matheus', 'nota' => 3],
+                ['matricula' => 3, 'nome' => 'Rafael Macedo', 'nota' => 2],
+                ['matricula' => 4, 'nome' => 'Eliane Alves', 'nota' => 8],
+                ['matricula' => 5, 'nome' => 'Renato Souza', 'nota' => 5]
+            ];
 
-        return $notas;
+        $p =  "<ul>";
+
+        foreach ($alunos as $aluno) {
+            $p = $p . 
+                "<li> 
+                Matricula: " . $aluno['matricula']
+                . "   |Nome:  " . $aluno['nome'] .
+                "   |Nota:  " . $aluno['nota'] .
+                "</li>";
+        }
+
+        $p .= "</ul>";
+
+        return $p;
     })->name('nota');
 
     Route::get('/limite/{limit}', function ($limit) {
-        $notas =
+        $alunos =
             [
-                'Renan Luiz',
-                'Kauan Matheus',
-                'Rafael Macedo',
-                'Eliane Alves',
-                'Renato Souza'
+                ['matricula' => 1, 'nome' => 'Renan Luiz', 'nota' => 1],
+                ['matricula' => 2, 'nome' => 'Kauan Matheus', 'nota' => 3],
+                ['matricula' => 3, 'nome' => 'Rafael Macedo', 'nota' => 2],
+                ['matricula' => 4, 'nome' => 'Eliane Alves', 'nota' => 8],
+                ['matricula' => 5, 'nome' => 'Renato Souza', 'nota' => 5]
             ];
 
         $i = 0;
 
         $p =  "<ul>";
 
-        foreach ($notas as $nota) {
+        foreach ($alunos as $aluno) {
             if ($i < $limit) {
-                $p = $p . "<li>$nota</li>";
+                $p = $p . "<li>Nome:  ".$aluno['nome'] ." Nota:  ".$aluno['nota']."</li>";
             }
             $i++;
         }
@@ -152,33 +180,42 @@ Route::prefix('/nota')->group(function () {
         $p =  "<ul>";
 
         foreach ($alunos as $aluno) {
+
             if ($aluno['matricula'] == $mat) {
                 $aluno['nota'] = $nota;
-                $p .=  "<li>" . $aluno['matricula'] . " - " . $aluno['nome'] . " - " . $aluno['nota'] . "</li>";
+                $p .=  "<li>Matricula: " . $aluno['matricula'] . " - Nome: " . $aluno['nome'] . " Nota: - " . $aluno['nota'] . "</li>";
             } else {
-                $p .=  "<li>" . $aluno['matricula'] . " - " . $aluno['nome'] . " - " . $aluno['nota'] . "</li>";
+                $p .=  "<li>Matricula: " . $aluno['matricula'] . " - Nome: " . $aluno['nome'] . " Nota: - " . $aluno['nota'] . "</li>";
             }
         }
         $p .= "</ul>";
 
+
+
         return $p;
     })->name('lancar');
 
-    Route::get('/conceito/{a}/{b}/{c}', function ($a, $b, $c) {
+    //Route::get('/conceito/{a}/{b}/{c}', function ($a, $b, $c) {
+    Route::get('/conceito', function () {
 
-        $media = ($a + $b + $c) / 3;
+        //  $media = ($a + $b + $c) / 3;
 
         $alunos =
             [
-                ['matricula' => 1, 'nome' => 'Renan Luiz', 'nota' => 10,'conceito'=> ''],
-                ['matricula' => 2, 'nome' => 'Kauan Matheus', 'nota' => 9,'conceito'=> ''],
-                ['matricula' => 3, 'nome' => 'Rafael Macedo', 'nota' => 4,'conceito'=> ''],
-                ['matricula' => 4, 'nome' => 'Eliane Alves', 'nota' => 2,'conceito'=> ''],
-                ['matricula' => 5, 'nome' => 'Renato Souza', 'nota' => 7,'conceito'=> '']
+                ['matricula' => 1, 'nome' => 'Renan Luiz', 'nota' => 10, 'conceito' => ''],
+                ['matricula' => 2, 'nome' => 'Kauan Matheus', 'nota' => 9, 'conceito' => ''],
+                ['matricula' => 3, 'nome' => 'Rafael Macedo', 'nota' => 4, 'conceito' => ''],
+                ['matricula' => 4, 'nome' => 'Eliane Alves', 'nota' => 2, 'conceito' => ''],
+                ['matricula' => 5, 'nome' => 'Renato Souza', 'nota' => 7, 'conceito' => '']
             ];
         $p =  "<ul>";
 
+
+
         foreach ($alunos as $aluno) {
+            if ($aluno['matricula'] == 1) {
+                array_push($alunos, $aluno);
+            }
             /*if () {
                 $p .=  "<li>" . $aluno['matricula'] 
                 . " - " . $aluno['nome'] 
@@ -193,6 +230,8 @@ Route::prefix('/nota')->group(function () {
             */
         }
         $p .= "</ul>";
+
+        dd($alunos);
 
         return $p;
     })->name('conceito');
