@@ -59,7 +59,7 @@ Route::prefix('/aluno')->group(function () {
 
         foreach ($alunos as $aluno) {
             if ($i < $limit) {
-                $p = $p ."<li>$aluno</li>";
+                $p = $p . "<li>$aluno</li>";
             }
             $i++;
         }
@@ -89,7 +89,7 @@ Route::prefix('/aluno')->group(function () {
             }
         }
         return "<h1>Aluno não encontrado</h1>";
-    })->name('matricula')->where('mat', '[1-9]');;
+    })->name('matricula')->where('mat', '[1-9+]');;
 
     Route::get('/nome/{nome}', function ($nome) {
         $alunos =
@@ -104,11 +104,10 @@ Route::prefix('/aluno')->group(function () {
         foreach ($alunos as $aluno) {
             if (strcmp($nome, $aluno) == 0) {
                 return "Aluno encontrado => " . $aluno;
-            } 
+            }
         }
 
         return "<h1>Aluno não encontrado!</h1>";
-
     })->name('nome')->where('nome', '[A-Za-z]+');
 });
 
@@ -127,7 +126,7 @@ Route::prefix('/nota')->group(function () {
         $p =  "<ul>";
 
         foreach ($alunos as $aluno) {
-            $p = $p . 
+            $p = $p .
                 "<li> 
                 Matricula: " . $aluno['matricula']
                 . "   |Nome:  " . $aluno['nome'] .
@@ -156,7 +155,7 @@ Route::prefix('/nota')->group(function () {
 
         foreach ($alunos as $aluno) {
             if ($i < $limit) {
-                $p = $p . "<li>Nome:  ".$aluno['nome'] ." Nota:  ".$aluno['nota']."</li>";
+                $p = $p . "<li>Nome:  " . $aluno['nome'] . " Nota:  " . $aluno['nota'] . "</li>";
             }
             $i++;
         }
@@ -164,7 +163,7 @@ Route::prefix('/nota')->group(function () {
         $p .= "</ul>";
 
         return $p;
-    })->name('limite');
+    })->name('limite')->where('limit', '[0-5]');
 
     Route::get('/lancar/{mat}/{nota}', function ($mat, $nota) {
 
@@ -193,12 +192,13 @@ Route::prefix('/nota')->group(function () {
 
 
         return $p;
-    })->name('lancar');
+    })->name('lancar')->where('mat', '[0-5]')->where('nota', '[0-9+]');
 
-    //Route::get('/conceito/{a}/{b}/{c}', function ($a, $b, $c) {
-    Route::get('/conceito', function () {
+    Route::get('/conceito/{a}/{b}/{c}', function ($a, $b, $c) {
 
-        //  $media = ($a + $b + $c) / 3;
+
+        $con = [$a,$b,$c];
+        sort($con);
 
         $alunos =
             [
@@ -208,31 +208,39 @@ Route::prefix('/nota')->group(function () {
                 ['matricula' => 4, 'nome' => 'Eliane Alves', 'nota' => 2, 'conceito' => ''],
                 ['matricula' => 5, 'nome' => 'Renato Souza', 'nota' => 7, 'conceito' => '']
             ];
+
+
         $p =  "<ul>";
 
+        for ($i = 0; $i < count($alunos); $i++) {
+            if ($alunos[$i]['nota'] >= $con[2]) {
 
+                $alunos[$i]['conceito'] = 'A';
+            } else if ($alunos[$i]['nota'] >=  $con[1] && $alunos[$i]['nota'] <  $con[2]) {
+
+                $alunos[$i]['conceito'] = 'B';
+            } else if ($alunos[$i]['nota'] >= $con[0] && $alunos[$i]['nota'] < $con[1]) {
+
+                $alunos[$i]['conceito'] = 'C';
+            } else {
+
+                $alunos[$i]['conceito'] = 'D';
+            }
+        }
 
         foreach ($alunos as $aluno) {
-            if ($aluno['matricula'] == 1) {
-                array_push($alunos, $aluno);
-            }
-            /*if () {
-                $p .=  "<li>" . $aluno['matricula'] 
-                . " - " . $aluno['nome'] 
-                . " - " . $aluno['nota'].
-                 " - " . $aluno['conceito'] . "</li>";
-            } else {
-                $p .=  "<li>" . $aluno['matricula'] 
-                . " - " . $aluno['nome'] 
-                . " - " . $aluno['nota'].
-                 " - " . $aluno['conceito'] . "</li>";
-            }
-            */
+
+            $p .=  "<li>Matricula: " . $aluno['matricula'] 
+            . "  Nome: " 
+            . $aluno['nome'] 
+            . " Nota:  " 
+            . $aluno['nota'] . " Conceito:  ".
+            $aluno['conceito'] ."</li>";
         }
+
         $p .= "</ul>";
 
-        dd($alunos);
 
-        return $p;
-    })->name('conceito');
+           return $p;
+    })->name('conceito')->where('a', '[0-9+]')->where('b', '[0-9+]')->where('c', '[0-9+]');
 });
